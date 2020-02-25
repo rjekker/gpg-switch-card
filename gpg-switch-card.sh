@@ -14,7 +14,7 @@ createmenu ()
     done
 }
 
-IFS=$'\n' keys_list=($(gpg2 --list-secret-keys --with-colons | egrep '^uid:' | cut -d: -f10))
+IFS=$'\n' keys_list=($(gpg --list-secret-keys --with-colons | egrep '^uid:' | cut -d: -f10))
 PS3='For which id do you want to remove the secret keys?'
 
 createmenu "${keys_list[@]}"
@@ -26,11 +26,11 @@ YUBI_ID=${keys_list[$(($REPLY-1))]}
 # It's an ugly way to include a nicely indented awk script here
 get_awk_source() {
     cat <<EOF
-BEGIN { 
+BEGIN {
   FS = ":";
 }
 
-/^ssb/ { 
+/^ssb/ {
     # Found a subkey
     key = \$5;
 }
@@ -55,13 +55,13 @@ EOF
 }
 
 get_active_yubi_grips () {
-    gpg2 --with-keygrip --list-secret-keys --with-colons "${YUBI_ID}" | awk -f <(get_awk_source)
+    gpg --with-keygrip --list-secret-keys --with-colons "${YUBI_ID}" | awk -f <(get_awk_source)
 }
 IFS=$'\n' grips=($(get_active_yubi_grips))
 
 echo
 echo "----- Listing selected keys -----"
-gpg2  --with-keygrip --list-secret-keys "${YUBI_ID}"
+gpg  --with-keygrip --list-secret-keys "${YUBI_ID}"
 echo "---------------------------------"
 echo
 
