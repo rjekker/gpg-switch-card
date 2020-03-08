@@ -15,7 +15,7 @@ createmenu ()
 }
 
 IFS=$'\n' keys_list=($(gpg --list-secret-keys --with-colons | egrep '^uid:' | cut -d: -f10))
-IFS=$'\n' keys_id_list=($(gpg2 --list-secret-keys --with-colons | egrep '^sec:' | cut -d: -f5))
+IFS=$'\n' keys_id_list=($(gpg --list-secret-keys --with-colons | egrep '^sec:' | cut -d: -f5))
 
 PS3='For which id do you want to remove the secret keys?'
 
@@ -77,3 +77,6 @@ do
     file="$HOME/.gnupg/private-keys-v1.d/$grip.key"
     rm -i $file
 done
+
+gpg --card-status > /dev/null
+echo "Try your card; should now work"
