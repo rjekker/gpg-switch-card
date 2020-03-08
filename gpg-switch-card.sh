@@ -15,10 +15,12 @@ createmenu ()
 }
 
 IFS=$'\n' keys_list=($(gpg --list-secret-keys --with-colons | egrep '^uid:' | cut -d: -f10))
+IFS=$'\n' keys_id_list=($(gpg2 --list-secret-keys --with-colons | egrep '^sec:' | cut -d: -f5))
+
 PS3='For which id do you want to remove the secret keys?'
 
 createmenu "${keys_list[@]}"
-YUBI_ID=${keys_list[$(($REPLY-1))]}
+YUBI_ID=${keys_id_list[$(($REPLY-1))]}
 
 
 # This function returns an awk script
